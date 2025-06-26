@@ -1,27 +1,21 @@
 module Main exposing (main)
 
-import Browser
-import Html exposing (text)
-import Time
+import Date exposing (Date)
 
 -- MODEL
-
 type alias Application =
-  { id: Int
-  , employer: String
-  , role: String
-  , salary: Int
-  , location: List String
-  , application_date: Time.Posix
+  { id : Int
+  , employer : String
+  , role : String
+  , salary : Int
+  , location : List String
+  , date : Date
   }
 
-type alias Model = 
-  { applications: List Application
-  , nextId: Int
-  , inputEmplyoer: String
-  , inputRole: String
-  , inputSalary: Int
-  , inputLocation: List String
+type alias Board = 
+  { applications : List Application
+  , nextId : Int
+  , input : Application
   }
 
 main =
