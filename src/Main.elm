@@ -40,6 +40,14 @@ initBoard =
 type Msg = 
   Create
   | Delete Int 
+  | UpdateEmployer String
+  | UpdateRole String
+  | UpdateSalary String
+  | UpdateLocation (List String)
+
+salaryToInt : String -> Int
+salaryToInt salary =
+    Maybe.withDefault defaultApplication.salary (String.toInt salary)
 
 update : Msg -> Board -> Board
 update msg board =
@@ -63,6 +71,18 @@ update msg board =
 
     Delete id ->
       { board | applications = List.filter (\application -> application.id /= id) board.applications }  
+
+    UpdateEmployer newEmployer ->
+      {board | input = { currentInput | employer = newEmployer }}
+
+    UpdateRole newRole ->
+      {board | input = { currentInput | role = newRole }}
+
+    UpdateSalary newSalary ->
+      {board | input = { currentInput | salary = salaryToInt newSalary }}
+
+    UpdateLocation newLocation ->
+      {board | input = { currentInput | location = newLocation }}
 
 main =
   Browser.element
