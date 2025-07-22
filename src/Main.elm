@@ -159,9 +159,8 @@ decodeSelection =
     |> Decode.map (List.map Tuple.second)
 
 main =
-  Browser.element
-    { init = init
-    , view = view
+  Browser.sandbox
+    { init = initBoard
     , update = update
-    , subscriptions = subscriptions
+    , view = view
     }
