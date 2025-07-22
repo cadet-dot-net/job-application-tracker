@@ -36,6 +36,34 @@ initBoard =
   , input = defaultApplication
   }
 
+-- UPDATE
+type Msg = 
+  Create
+  | Delete Int 
+
+update : Msg -> Board -> Board
+update msg board =
+  let
+    currentInput = board.input
+  in
+  case msg of
+    Create ->
+      if currentInput.employer == "" then
+        board
+      else
+        let
+          { employer, role, salary, location, date } = currentInput
+        in
+        { board
+            | applications = board.applications ++ 
+              [Application board.nextId employer role salary location date]
+            , nextId = board.nextId + 1
+            , input = defaultApplication
+        }
+
+    Delete id ->
+      { board | applications = List.filter (\application -> application.id /= id) board.applications }  
+
 main =
   Browser.element
     { init = init
