@@ -1,6 +1,12 @@
 module Main exposing (main)
 
+import Browser exposing (application)
 import Date exposing (Date)
+import Debug exposing (toString)
+import Html exposing (Html, br, button, div, input, label, li, option, select, text, ul)
+import Html.Attributes exposing (multiple, placeholder, value)
+import Html.Events exposing (on, onClick, onInput)
+import Json.Decode as Decode
 import Time exposing (Month(..))
 
 -- MODEL
@@ -83,6 +89,58 @@ update msg board =
 
     UpdateLocation newLocation ->
       {board | input = { currentInput | location = newLocation }}
+
+-- VIEW
+view : Board -> Html Msg
+view board =
+  div []
+    [ label [] [ text "Employer: " ]
+    , input
+      [ placeholder "Big Employer"
+      , value board.input.employer
+      , onInput UpdateEmployer
+      ]
+      []
+    , br [] []
+
+    ,  label [] [ text "Role: " ]
+    , input
+      [ placeholder "Software Engineer"
+      , value board.input.role
+      , onInput UpdateRole
+      ]
+      []
+    , br [] []
+
+    , label [] [ text "Salary: " ]
+    , input
+      [ value (toString board.input.salary)
+      , onInput UpdateSalary
+      ]
+      []
+    , br [] []
+
+    , label [] [ text "Location: " ]
+    , select 
+      [ multiple True
+      , on "change" (Decode.map UpdateLocation decodeSelection)
+      ]
+      [ option [ value "remote" ] [ text "Remote" ]
+      , option [ value "hybrid" ] [ text "Hybrid" ] 
+      , option [ value "site" ] [ text "On-site" ]
+      , option [ value "europe" ] [ text "Europe" ]
+      , option [ value "north america" ] [ text "North America"]
+      ]
+    , br [] []
+
+    , button [ onClick Create ] [ text "Add" ]
+    ]
+
+decodeSelection : Decode.Decoder (List String)
+decodeSelection =
+    Decode.at [ "target", "selectedOptions" ] 
+      (Decode.keyValuePairs (Decode.field "value" Decode.string))
+    |> Decode.map (List.map Tuple.second)
 
 main =
   Browser.element
