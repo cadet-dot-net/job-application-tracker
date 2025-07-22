@@ -134,6 +134,22 @@ view board =
     , br [] []
 
     , button [ onClick Create ] [ text "Add" ]
+    , ul [] (List.map viewApplication board.applications)
+    ]
+
+viewApplication : Application -> Html Msg
+viewApplication application =
+  li []
+    [ text
+      ( String.join " | "
+        [ application.role
+        , application.employer
+        , ( "£" ++ toString application.salary )
+        , ( toString application.location )
+        , " "
+        ]
+      )
+    , button [ onClick (Delete application.id) ] [ text "Delete" ]
     ]
 
 decodeSelection : Decode.Decoder (List String)
