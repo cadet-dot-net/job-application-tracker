@@ -1,45 +1,26 @@
 module Main exposing (main)
 
+import Application exposing (Application)
+
 import Browser exposing (application)
-import Date exposing (Date)
 import Debug exposing (toString)
 import Html exposing (Html, br, button, div, input, label, li, option, select, text, ul)
 import Html.Attributes exposing (multiple, placeholder, value)
 import Html.Events exposing (on, onClick, onInput)
 import Json.Decode as Decode
-import Time exposing (Month(..))
 
 -- MODEL
-type alias Application =
-  { id : Int
-  , employer : String
-  , role : String
-  , salary : Int
-  , location : List String
-  , date : Date
-  }
-
 type alias Board = 
   { applications : List Application
   , nextId : Int
   , input : Application
   }
 
-defaultApplication : Application
-defaultApplication = 
-  { id = -1
-  , employer = ""
-  , role = ""
-  , salary = 0
-  , location = []
-  , date = Date.fromCalendarDate 1999 Dec 31
-  }
-
 initBoard : Board
 initBoard =
   { applications = []
   , nextId = 1
-  , input = defaultApplication
+  , input = Application.default
   }
 
 -- UPDATE
@@ -50,10 +31,6 @@ type Msg =
   | UpdateRole String
   | UpdateSalary String
   | UpdateLocation (List String)
-
-salaryToInt : String -> Int
-salaryToInt salary =
-    Maybe.withDefault defaultApplication.salary (String.toInt salary)
 
 update : Msg -> Board -> Board
 update msg board =
@@ -72,7 +49,7 @@ update msg board =
             | applications = board.applications ++ 
               [Application board.nextId employer role salary location date]
             , nextId = board.nextId + 1
-            , input = defaultApplication
+            , input = Application.default
         }
 
     Delete id ->
@@ -85,7 +62,7 @@ update msg board =
       {board | input = { currentInput | role = newRole }}
 
     UpdateSalary newSalary ->
-      {board | input = { currentInput | salary = salaryToInt newSalary }}
+      {board | input = { currentInput | salary = Application.salaryToInt newSalary }}
 
     UpdateLocation newLocation ->
       {board | input = { currentInput | location = newLocation }}
