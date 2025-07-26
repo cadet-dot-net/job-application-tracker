@@ -5,7 +5,7 @@ import Application exposing (Application)
 import Browser exposing (application)
 import Debug exposing (toString)
 import Html exposing (Html, br, button, div, input, label, li, option, select, text, ul)
-import Html.Attributes exposing (multiple, placeholder, value)
+import Html.Attributes exposing (class, multiple, placeholder, value)
 import Html.Events exposing (on, onClick, onInput)
 import Json.Decode as Decode
 
@@ -70,7 +70,7 @@ update msg board =
 -- VIEW
 view : Board -> Html Msg
 view board =
-  div []
+  div [class "board-display"]
     [ label [] [ text "Employer: " ]
     , input
       [ placeholder "Big Employer"
@@ -135,6 +135,7 @@ decodeSelection =
       (Decode.keyValuePairs (Decode.field "value" Decode.string))
     |> Decode.map (List.map Tuple.second)
 
+main : Program () Board Msg
 main =
   Browser.sandbox
     { init = initBoard
